@@ -1,10 +1,10 @@
-import git
-import pywinauto, os, time
-import psutil
 import json
-import gitdb, nose
+import psutil
+import os
+import time
 import urllib2
 
+# read json file
 with open("git_config.json", "r") as json_file:
     git_config = json.load(json_file)
 
@@ -15,7 +15,11 @@ if(git_config["install"] == 0):
     file = urllib2.urlopen(url)
     with open('Git-2.19.0-32-bit.exe', 'wb') as f:
         f.write(file.read())
+
+	# AUTO INSTALL GIT
     os.system('Git-2.19.0-32-bit.exe')
+	# AUTO INSTALL GIT
+
     os.remove('Git-2.19.0-32-bit.exe')
     print("Downloaded and installed git.")
     time.sleep(2)
@@ -26,13 +30,14 @@ if(git_config["install"] == 0):
         json.dump(git_config, json_file)
 
     if(git_config["repo_init"] == 0):
-        os.chdir("./")
-        os.system('git init')
-        os.system('git config --global user.name "steven-poriazis"')
-        os.system('git config --global user.email steve.poriazis.contact@gmail.com')
-        os.system('git remote add origin https://github.com/steven-poriazis/dawn-of-heroes_client.git')
-        print("Created empty repo and connected to remote.")
-        time.sleep(2)
+        # git configuration
+        os.chdir("./")          # change directory to client folder
+        os.system('git init')   # create empty repo in client folder
+        os.system('git config --global user.name "steven-poriazis"')                    # config git username
+        os.system('git config --global user.email steve.poriazis.contact@gmail.com')	# config git email
+        os.system('git remote add origin https://github.com/steven-poriazis/dawn-of-heroes_client.git')	   # config git remote
+        print("Created empty repo and connected to remote.")	# inform user that repo is ready for update
+        time.sleep(2)			# wait
         
         # update json file
         git_config["repo_init"] = 1
@@ -50,6 +55,6 @@ raw_input('')
 PROCNAME_1 = "git.exe"
 PROCNAME_2 = "git-remote-https.exe"
 for proc in psutil.process_iter():
-    if proc.name() == PROCNAME_1 or proc.name() == PROCNAME_2: # check whether the process name matches
-        proc.kill()
+    if proc.name() == PROCNAME_1 or proc.name() == PROCNAME_2: # check if the process names match
+		proc.kill()    # kill patcher-related processes
 exit(0)
